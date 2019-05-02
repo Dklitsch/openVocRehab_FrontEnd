@@ -3,7 +3,7 @@ import './App.css';
 import Login from './components/Login'
 import Register from './components/Register'
 import Application from './components/Application'
-import { BrowserRouter as Router, Route} from 'react-router-dom'
+import { BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
@@ -33,6 +33,14 @@ const client = new ApolloClient({
   cache,
 })
 
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route {...rest} render={(props) => (
+    localStorage.getItem('token') != ""
+      ? <Component {...props} />
+      : <Redirect to='/' />
+  )} />
+)
+
 class App extends Component {
   render() {
     return (
@@ -40,15 +48,10 @@ class App extends Component {
         <Router>
           <div>
             <main>
-            {/* <Route {} render={props => (
-                    localStorage.getItem('user')
-                        ? <Component {...props} />
-                        : <Redirect to={{ pathname: '/login', state: { from: props.location } }} />
-                )} /> */}
               <Route exact path="/" component={Login} />
               <Route exact path="/login" component={Login} />
               <Route path="/register" component={Register} />
-              <Route path="/application" component={Application} />
+              <PrivateRoute path="/application" component={Application} />
             </main>
           </div>
         </Router>
