@@ -170,8 +170,6 @@ function Register(props) {
                     state: { userRegistered: true }
                   }}/>}
 
-            {/* The app bar is really ugly, I'll fix it later.*/}
-
             <AppBar class={classes.AppBar} position="static">
 
             <div class="two-coulmn-grid">

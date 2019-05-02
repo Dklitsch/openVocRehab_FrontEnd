@@ -11,6 +11,7 @@ import { CardContent } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
+import { AppBar } from '@material-ui/core';
 
 const styles = standard_inline
 
@@ -27,7 +28,7 @@ function Login(props) {
 
     const { classes } = props;
 
-    const [signInUsername, setSignUpUsername] = useState("");
+    const [signInUsername, setSignInUsername] = useState("");
     const [validUsername, setValidUsername] = useState(true);
     const [usernameValidationMessage, setUsernameValidationMessage] = useState("");
 
@@ -89,6 +90,65 @@ function Login(props) {
 
     return (
 
+        <div>
+
+        <AppBar class={classes.AppBar} position="static">
+
+            <div class="two-coulmn-grid">
+
+            <div>
+
+            <Grid
+                                        container
+                                        direction="row"
+                                        justify="space-between"
+                                        alignContent="center"
+                                        alignItems="center"
+                                    >
+
+                    <Typography variant="h6" color="inherit" style={{padding : ".5em"}}>
+                        Login
+                    </Typography>
+
+                    </Grid>
+
+                    </div>
+
+                    <div>
+
+                    <Grid
+                    container
+                    direction="row"
+                    justify="flex-end"
+                    alignItems="center"
+                    >
+
+                        <TextField id="signInUsername" autoComplete="username"
+                            value={signInUsername} 
+                            onChange={ e => setSignInUsername(e.target.value)}
+                            label="Username" name="username" variant="filled"
+                            style={{backgroundColor : "white"}}
+                            
+                        />
+
+                        <TextField id="signInPassword" autoComplete="password"
+                            value={password} 
+                            onChange={ e => setPassword(e.target.value)}
+                            label="Password" name="password" variant="filled"
+                            style={{backgroundColor : "white"}}
+                        />
+
+                        <Button color="inherit">Login</Button>
+
+                        
+
+                </Grid>
+
+                </div>
+                </div>
+
+            </AppBar>
+
         <Grid
             container
             direction="column"
@@ -129,7 +189,7 @@ function Login(props) {
 
                                 <TextField id="signUpUsername" autoComplete="username"
                                     value={signInUsername}
-                                    onChange={e => setSignUpUsername(e.target.value)}
+                                    onChange={e => setSignInUsername(e.target.value)}
                                     onBlur={
                                         e => validateUsername(e.target.value)
                                     }
@@ -169,6 +229,8 @@ function Login(props) {
             </Mutation>
 
         </Grid>
+
+        </div>
 
 
     );
