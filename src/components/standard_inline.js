@@ -11,6 +11,8 @@ const standard_inline = theme => ({
       },
     },
     paper: {
+      marginLeft: theme.spacing.unit * 1,
+      marginRight: theme.spacing.unit * 1,
       marginTop: theme.spacing.unit * 8,
       display: 'flex',
       flexDirection: 'column',
