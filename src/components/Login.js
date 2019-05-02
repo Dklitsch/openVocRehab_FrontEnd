@@ -6,7 +6,7 @@ import withStyles from '@material-ui/core/styles/withStyles';
 import Typography from '@material-ui/core/Typography';
 import './two-column-grid.css';
 import standard_inline from './standard_inline'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import { CardContent } from '@material-ui/core';
 import TextField from '@material-ui/core/TextField';
 import gql from 'graphql-tag';
@@ -96,15 +96,15 @@ function Login(props) {
 
             <div class="two-coulmn-grid">
 
-            <div>
+                <div>
 
-            <Grid
-                                        container
-                                        direction="row"
-                                        justify="space-between"
-                                        alignContent="center"
-                                        alignItems="center"
-                                    >
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignContent="center"
+                        alignItems="center"
+                    >
 
                     <Typography variant="h6" color="inherit" style={{padding : ".5em"}}>
                         Login
@@ -172,6 +172,8 @@ function Login(props) {
                             }
                         }
                     }>
+
+                        {localStorage.getItem('token') && <Redirect to="/application"></Redirect>}
 
                         <Paper className={classes.paper}>
 
