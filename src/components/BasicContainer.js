@@ -4,6 +4,7 @@ import Paper from '@material-ui/core/Paper'
 import withStyles from '@material-ui/core/styles/withStyles';
 import './two-column-grid.css';
 import standard_inline from './standard_inline'
+import OvrAppBar from './OvrAppBar'
 
 const styles = standard_inline
 
@@ -13,17 +14,17 @@ function BasicContainer(props) {
 
         return (
                 
-                <Grid
-                        container
-                        direction="column"
-                        justify="space-between"
-                        alignItems="center"
-                        >
-                        <Paper className={classes.paper}> 
+                        <Grid
+                                container
+                                direction="column"
+                                justify="space-between"
+                                alignItems="center"
+                                >
+                                <Paper className={classes.paper}> 
 
-                        {props.children}
-                        </Paper>
-                </Grid>
+                                {props.children}
+                                </Paper>
+                        </Grid>
         )
     }
 

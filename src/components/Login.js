@@ -28,6 +28,8 @@ function Login(props) {
 
     const { classes } = props;
 
+    const [loggedIn, setLoggedIn] = useState(localStorage.getItem('token') != "null"); 
+
     const [signInUsername, setSignInUsername] = useState("");
     const [validUsername, setValidUsername] = useState(true);
     const [usernameValidationMessage, setUsernameValidationMessage] = useState("");
@@ -104,6 +106,7 @@ function Login(props) {
                         justify="space-between"
                         alignContent="center"
                         alignItems="center"
+                        wrap="nowrap"
                     >
 
                     <Typography variant="h6" color="inherit" style={{padding : ".5em"}}>
@@ -173,7 +176,7 @@ function Login(props) {
                         }
                     }>
 
-                        {localStorage.getItem('token') && <Redirect to="/application"></Redirect>}
+                        {localStorage.getItem('token') != "null" && <Redirect to="/application"></Redirect>}
 
                         <Paper className={classes.paper}>
 

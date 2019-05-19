@@ -11,6 +11,7 @@ import BasicContainer from './BasicContainer'
 import { Link, Redirect } from 'react-router-dom'
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
+import OvrAppBar from './OvrAppBar'
 
 const styles = standard_inline
 
@@ -69,6 +70,8 @@ const StudentStatusChoices = [
 
 function Application(props) {
 
+    const { classes } = props;
+
     function isEmptyValidation(stateVar, stateFunction) {
 
         if (stateVar == "") {
@@ -111,6 +114,12 @@ function Application(props) {
 
     return (
 
+        <div>
+
+            <OvrAppBar />
+
+        <BasicContainer>
+
         <Mutation mutation={CREATE_APPLICATION}
             onCompleted={(data) => { }}>
 
@@ -126,7 +135,7 @@ function Application(props) {
                 }
                 }>
 
-                    <BasicContainer>
+                    
 
                         <Typography variant="h6">
                             Welcome to Vocational Rehabilitation. We need more information to finish processing your application. If you would like to complete the application later, you can exit and continue at any time.
@@ -171,25 +180,25 @@ function Application(props) {
                                     </MenuItem>
                                 ))}
 
-                            </TextField>
+                            </TextField>     
 
-                            <Typography variant="h7">
+                            <div style={{textAlign : "left"}}>                 
                             
+                            <Typography>A student with a disability (34 CFR 361.5(c)(51) means, in general, an individual with a disability in a secondary, postsecondary, or other recognized education program who--</Typography>
                             
-                            <p>A student with a disability (34 CFR 361.5(c)(51) means, in general, an individual with a disability in a secondary, postsecondary, or other recognized education program who--</p>
+                            <Typography>&emsp;(A)(1) Is not younger than the earliest age for the provision of transition services under section 614(d)(1)(A)(i)(VIII) of the Individuals with Disabilities Education Act (20 U.S.C. 1414(d)(1)(A)(i)(VIII)); or</Typography>
                             
-                            <p>(A)(1) Is not younger than the earliest age for the provision of transition services under section 614(d)(1)(A)(i)(VIII) of the Individuals with Disabilities Education Act (20 U.S.C. 1414(d)(1)(A)(i)(VIII)); or</p>
+                            <Typography>&emsp;&emsp;(2)If the State involved elects to use a lower minimum age for receipt of pre-employment transition services under this Act, is not younger than that minimum age; and</Typography>
                             
-                            <p>(2)If the State involved elects to use a lower minimum age for receipt of pre-employment transition services under this Act, is not younger than that minimum age; and</p>
+                            <Typography>&emsp;(B)(1) Is not older than 21 years of age; or</Typography>
                             
-                            <p>(B)(1) Is not older than 21 years of age; or</p>
+                            <Typography>&emsp;&emsp;(2)If the State law for the State provides for a higher maximum age for receipt of services under the Individuals with Disabilities Education Act (20 U.S.C. 1400 et seq.), is not older than that maximum age; and</Typography>
                             
-                            <p>(2)If the State law for the State provides for a higher maximum age for receipt of services under the Individuals with Disabilities Education Act (20 U.S.C. 1400 et seq.), is not older than that maximum age; and</p>
+                            <Typography>&emsp;(C)(1) Is eligible for, and receiving, special education or related services under Part B of the Individuals with Disabilities Education Act (20 U.S.C. 1411 et seq.); or</Typography>
                             
-                            <p>(C)(1) Is eligible for, and receiving, special education or related services under Part B of the Individuals with Disabilities Education Act (20 U.S.C. 1411 et seq.); or</p>
-                            
-                            <p>(2)Is a student who is an individual with a disability, for purposes of section 504.</p>
-                            </Typography>
+                            <Typography>&emsp;&emsp;(2)Is a student who is an individual with a disability, for purposes of section 504.</Typography>
+
+                            </div>   
 
                             <TextField id="studentStatus" name="studentStatus"
                                 select fullWidth={true}
@@ -217,7 +226,7 @@ function Application(props) {
 
                         </Grid>
 
-                    </BasicContainer>
+                    
 
                 </form>
 
@@ -226,6 +235,10 @@ function Application(props) {
             }
 
         </Mutation>
+
+        </BasicContainer>
+
+        </div>
 
     )
 
