@@ -19,12 +19,22 @@ const standard_inline = theme => ({
       alignItems: 'center',
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
     },
+    toolbarIcon: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end',
+      padding: '0 8px',
+      ...theme.mixins.toolbar,
+    },
     form: {
       width: '100%', // Fix IE 11 issue.
       marginTop: theme.spacing.unit,
     },
     button: {
       marginTop: theme.spacing.unit * 3,
+    },
+    nestedListItem: {
+      paddingLeft: theme.spacing(4),
     },
   });
 

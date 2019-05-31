@@ -12,6 +12,7 @@ import { Link, Redirect } from 'react-router-dom'
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import { AppBar } from '@material-ui/core';
+import {useFormField} from './UseFormField'
 
 const styles = standard_inline
 styles.AppBar = {flexGrow: 1,}
@@ -43,119 +44,58 @@ mutation createUser(
 function Register(props) {
 
     const { classes } = props;
-    const [signUpUsername, setSignUpUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [passwordConfirm, setPasswordconfirm] = useState("");
-    const [firstName, setFirstname] = useState("");
-    const [lastName, setLastname] = useState("");
 
     const [signInUsername, setSignInUsername] = useState("");
     const [signInPassword, setSignInPassword] = useState("");
 
     const [userCreated, setUserCreated] = useState(false);
 
-    const [validUsername, setValidUsername] = useState(true);
-    const [validEmail, setValidEmail] = useState(true);
-    const [validPassword, setValidPassword] = useState(true);
-    const [validPasswordConfirm, setValidPasswordConfirm] = useState(true);
-    const [validFirstName, setValidFirstname] = useState(true);
-    const [validLastName, setValidLastname] = useState(true);
-    
-    const [usernameValidationMessage, setUsernameValidationMessage] = useState("");
-    const [passwordValidationMessage, setPasswordValidationMessage] = useState("");
-    const [passwordConfirmValidationMessage, setPasswordConfirmValidationMessage] = useState("");
-    const [emailValidationMessage, setEmailValidationMessage] = useState("");
-    const [firstNameValidationMessage, setFirstNameValidationMessage] = useState("");
-    const [lastNameValidationMessage, setLastNameValidationMessage] = useState("");
+    const [signUpUsername, setSignUpUsername] = useFormField(
+        { value: "", valid : true, message : ""},
+        value => (value != ""),
+        "Please enter a username."
+    );
 
-    function isEmptyValidation(stateVar, stateFunction) {
+    const [password, setPassword] = useFormField(
+        { value: "", valid : true, message : ""},
+        value => (value != ""),
+        "Password cannot be empty."
+    );
 
-        if (stateVar == "") {
-            stateFunction(false);
-            return false;
-        }
-        else {
-            stateFunction(true);
-            return true;
-        }
+    const [passwordConfirm, setPasswordconfirm] = useFormField(
+        { value: "", valid : true, message : ""},
+        value => (value == password),
+        "Passwords must match."
+    );
 
-    }
+    const [email, setEmail] = useFormField(
+        { value: "", valid : true, message : ""},
+        value => (value != ""),
+        "Please enter an email."
+    );
 
-    function validateUsername(unVal) {
-        let valMessage = isEmptyValidation(unVal, setValidUsername) ? "" : "Username cannot be empty.";
-        setUsernameValidationMessage(valMessage);
-    }
+    const [firstName, setFirstname] = useFormField(
+        { value: "", valid : true, message : ""},
+        value => (value != ""),
+        "Please enter a first name."
+    );
 
-    function validatePassword(pwVal) {
-        if (pwVal == "") {
-            setValidPassword(false);
-            setPasswordValidationMessage("Password cannot be empty.")
-        }
-        else {
-
-            if (passwordConfirm != "" && pwVal != passwordConfirm) {
-                setValidPassword(false);
-                setPasswordValidationMessage("Passwords do not match.")
-            }
-            else {
-                setValidPassword(true);
-                setPasswordValidationMessage("")
-            }
-
-        }
-    }
-
-    function validateConfirmPassword(pwcVal) {
-
-        if (pwcVal == "") {
-
-            setValidPasswordConfirm(false);
-            setPasswordConfirmValidationMessage("Password confirmation.")
-
-        }
-        else {
-
-            if (password != "" && password != pwcVal) {
-                setValidPasswordConfirm(false);
-                setPasswordConfirmValidationMessage("Passwords do not match.")
-            }
-            else {
-                setValidPasswordConfirm(true);
-                setPasswordConfirmValidationMessage("")
-            }
-
-        };
-
-        setPasswordconfirm(pwcVal);
-    }
-
-    function validateEmail(emailVal) {
-        let valMessage = isEmptyValidation(emailVal, setValidEmail) ? "" : "Email cannot be empty.";
-        setEmailValidationMessage(valMessage);
-        setEmail(emailVal)
-    }
-
-    function validateFirstName(fnVal) {
-        let valMessage = isEmptyValidation(fnVal, setValidFirstname) ? "" : "First name cannot be empty.";
-        setFirstNameValidationMessage(valMessage);
-        setFirstname(fnVal)
-    }
-
-    function validateLastName(lnVal) {
-        let valMessage = isEmptyValidation(lnVal, setValidLastname)? "" : "Last name cannot be empty.";
-        setLastNameValidationMessage(valMessage);
-        setLastname(lnVal)
-    }
+    const [lastName, setLastname] = useFormField(
+        { value: "", valid : true, message : ""},
+        value => (value != ""),
+        "Please enter a last name."
+    );
 
     function handleResponse(data) {
         setUserCreated(data.createUser.success);
         if (data.createUser.userAlreadyExists)
         {
-
-            setValidUsername(false);
-            setUsernameValidationMessage("Username already exists.");
-
+            setSignUpUsername(
+                { 
+                    value : signUpUsername.value,
+                    valid : false,
+                    message : "Username already exists."}
+            )
         };
     }
 
@@ -236,8 +176,8 @@ function Register(props) {
                         e.preventDefault();
                         createUser({
                             variables: {
-                                username: signUpUsername, email: email, password: password,
-                                first_name: firstName, last_name: lastName
+                                username: signUpUsername.value, email: email.value, password: password.value,
+                                first_name: firstName.value, last_name: lastName.value
                             }
                         });
                     }
@@ -261,31 +201,29 @@ function Register(props) {
                                     >
 
                                         <TextField id="signUpUsername" autoComplete="username"
-                                            value={signUpUsername} 
+                                            value={signUpUsername.value} 
                                             onChange={ e => setSignUpUsername(e.target.value)}
-                                            onBlur={
-                                                e => validateUsername(e.target.value)
-                                            } 
+                                            onBlur={ e => setSignUpUsername(e.target.value)}
                                             required={true} label="Username" name="username"
-                                            error={!validUsername} margin="normal"
-                                            helperText={usernameValidationMessage}
+                                            error={!signUpUsername.valid} margin="normal"
+                                            helperText={signUpUsername.message}
                                         />
 
                                         <TextField id="password" autoComplete="new-password"
-                                            value={password} onChange={e => setPassword(e.target.value)}
-                                            onBlur={e => validatePassword(e.target.value)}
+                                            value={password.value} onChange={e => setPassword(e.target.value)}
+                                            onBlur={e => setPassword(e.target.value)}
                                             required={true} label="Password" name="password"
                                             type="password"
-                                            error={!validPassword} margin="normal"
-                                            helperText={passwordValidationMessage} />
+                                            error={!password.valid} margin="normal"
+                                            helperText={password.message} />
 
                                         <TextField id="confirmPassword" autoComplete="new-password"
-                                            value={passwordConfirm} onChange={e => setPasswordconfirm(e.target.value)}
-                                            onBlur={e => validateConfirmPassword(e.target.value)}
+                                            value={passwordConfirm.value} onChange={e => setPasswordconfirm(e.target.value)}
+                                            onBlur={e => setPasswordconfirm(e.target.value)}
                                             required={true} label="Confirm Password" name="confirmPassword"
                                             type="password"
-                                            error={!validPasswordConfirm} margin="normal" 
-                                            helperText={passwordConfirmValidationMessage}/>
+                                            error={!passwordConfirm.valid} margin="normal" 
+                                            helperText={passwordConfirm.message}/>
 
                                     </Grid>
 
@@ -302,25 +240,25 @@ function Register(props) {
 
 
                                         <TextField id="email" autoComplete="email"
-                                            value={email} onChange={ e => setEmail(e.target.value)}
-                                            onBlur={e => validateEmail(e.target.value)} required={true}
-                                            label="Email" name="email" error={!validEmail}
+                                            value={email.value} onChange={ e => setEmail(e.target.value)}
+                                            onBlur={ e => setEmail(e.target.value)} required={true}
+                                            label="Email" name="email" error={!email.valid}
                                             margin="normal"
-                                            helperText={emailValidationMessage} />
+                                            helperText={email.message} />
 
                                         <TextField id="firstName" autoComplete="given-name"
-                                            value={firstName} onChange={ e => setFirstname(e.target.value)}
-                                            onBlur={e => validateFirstName(e.target.value)} required={true}
-                                            label="First Name" name="firstName" error={!validFirstName}
+                                            value={firstName.value} onChange={ e => setFirstname(e.target.value)}
+                                            onBlur={ e => setFirstname(e.target.value)} required={true}
+                                            label="First Name" name="firstName" error={!firstName.valid}
                                             margin="normal" 
-                                            helperText={firstNameValidationMessage}/>
+                                            helperText={firstName.message}/>
 
                                         <TextField id="lastName" autoComplete="family-name"
-                                            value={lastName} onChange={ e => setLastname(e.target.value)}
-                                            onBlur={e => validateLastName(e.target.value)} required={true}
-                                            label="Last Name" name="lastName" error={!validLastName}
+                                            value={lastName.value} onChange={ e => setLastname(e.target.value)}
+                                            onBlur={ e => setLastname(e.target.value)} required={true}
+                                            label="Last Name" name="lastName" error={!lastName.valid}
                                             margin="normal" 
-                                            helperText={lastNameValidationMessage}/>
+                                            helperText={lastName.message}/>
 
                                     </Grid>
 

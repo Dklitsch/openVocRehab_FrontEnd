@@ -3,12 +3,14 @@ import './App.css';
 import Login from './components/Login'
 import Register from './components/Register'
 import Application from './components/Application'
+import IndividualCharacteristics from './components/IndividualCharacteristics/Page'
 import { BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
 import { ApolloClient } from 'apollo-client'
 import { createHttpLink } from 'apollo-link-http'
 import { InMemoryCache } from 'apollo-cache-inmemory'
 import { ApolloProvider } from "react-apollo";
 import { setContext } from 'apollo-link-context';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
 const cache = new InMemoryCache();
 
@@ -52,9 +54,12 @@ class App extends Component {
               <Route exact path="/login" component={Login} />
               <Route path="/register" component={Register} />
               <PrivateRoute path="/application" component={Application} />
+              <Route path="/individual-characteristics" component={props => <IndividualCharacteristics {...props} />} />
             </main>
           </div>
         </Router>
+
+        <CssBaseline />
       </ApolloProvider>
     );
   }

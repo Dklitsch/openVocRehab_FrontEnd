@@ -12,6 +12,8 @@ import { Link, Redirect } from 'react-router-dom'
 import gql from 'graphql-tag';
 import { Mutation } from 'react-apollo';
 import OvrAppBar from './OvrAppBar'
+import {useFormField} from './UseFormField'
+import PersistentDrawerLeft from './CollapsableDrawerPage'
 
 const styles = standard_inline
 
@@ -68,68 +70,50 @@ const StudentStatusChoices = [
     {'label': 'Individual is a student with a disability who does not have a section 504 accommodation and is not receiving services under an IEP.', 'value': 3}, {'label': 'Individual is not a student with a disability.', 'value': 0}
 ]
 
+function isNotEmptyOrNull(value){
+
+    return value != "" && value != null;
+
+};
+
 function Application(props) {
 
     const { classes } = props;
 
-    function isEmptyValidation(stateVar, stateFunction) {
+    const [dateOfBirth, setDateOfBirth] = useFormField(
+        { value: "", valid : true, message : ""},
+        (value) => (value != "" && value != null),
+        "Please enter a date of birth."
+    );
 
-        if (stateVar == "") {
-            stateFunction(false);
-            return false;
-        }
-        else {
-            stateFunction(true);
-            return true;
-        }
+    const [sourceOfReferral, setSourceOfReferral] = useFormField(
+        { value: null, valid : true, message : ""},
+        (value) => (value != null),
+        "Please select a source of referral."
+    );
 
-    }
-
-    const [dateOfBirth, setDateOfBirth] = useState("");
-    const [validDateOfBirth, setValidDateOfBirth] = useState(true);
-    const [dateOfBirthValidationMessage, setDateOfBirthValidationMessage] = useState("");
-
-    function validateDateOfBirth(dateOfBirthValue) {
-        let valMessage = isEmptyValidation(dateOfBirthValue, setValidDateOfBirth) ? "" : "Please enter a date of birth.";
-        setDateOfBirthValidationMessage(valMessage);
-    }
-
-    const [sourceOfReferral, setSourceOfReferral] = useState("");
-    const [validSourceOfReferral, setValidSourceOfReferral] = useState(true);
-    const [sourceOfReferralValidationMessage, setSourceOfReferralValidationMessage] = useState("");
-
-    function validateSourceOfReferral(sourceOfReferralVal) {
-        let valMessage = isEmptyValidation(sourceOfReferralVal, setValidSourceOfReferral) ? "" : "Please select a source of referral.";
-        setSourceOfReferralValidationMessage(valMessage);
-    }
-
-    const [studentStatus, setStudentStatus] = useState("");
-    const [validstudentStatus, setValidStudentStatus] = useState(true);
-    const [studentStatusValidationMessage, setStudentStatusValidationMessage] = useState("");
-
-    function validateStudentStatus(studentStatusValue) {
-        let valMessage = isEmptyValidation(studentStatusValue, setValidStudentStatus) ? "" : "Please select a student status.";
-        setDateOfBirthValidationMessage(valMessage);
-    }
+    const [studentStatus, setStudentStatus] = useFormField(
+        { value: null, valid : true, message : ""},
+        (value) => (value != null),
+        "Please select a student status."
+    );
 
     return (
 
-        <div>
-
-            <OvrAppBar />
-
-        <BasicContainer>
+        <PersistentDrawerLeft>
 
         <Mutation mutation={CREATE_APPLICATION}
             onCompleted={(data) => { }}>
 
-            {(createUser, { loading, error, data }) => (
+            {(createApplication, { loading, error, data }) => (
 
                 <form onSubmit={e => {
                     e.preventDefault();
-                    createUser({
+                    createApplication({
                         variables: {
-
+                            dateOfBirth: dateOfBirth, 
+                            sourceOfReferral: sourceOfReferral,
+                            studentStatus : studentStatus
                         }
                     });
                 }
@@ -149,14 +133,12 @@ function Application(props) {
                         >
 
                             <TextField id="dateOfBirth" autoComplete="bday"
-                                value={dateOfBirth} fullWidth={true}
+                                value={dateOfBirth.value} fullWidth={true}
                                 onChange={ e => setDateOfBirth(e.target.value)}
-                                onBlur={
-                                    e => validateDateOfBirth(e.target.value)
-                                } 
+                                onBlur={ e => setDateOfBirth(e.target.value)}
                                 required={true} label="Date of Birth" name="bday"
-                                error={!validDateOfBirth} margin="normal"
-                                helperText={dateOfBirthValidationMessage} type="date"
+                                error={!dateOfBirth.valid} margin="normal"
+                                helperText={dateOfBirth.message} type="date"
                                 InputLabelProps={{
                                     shrink: true,
                                   }}
@@ -164,14 +146,15 @@ function Application(props) {
 
                             <TextField id="sourceOfReferral" name="sourceOfReferral"
                                 select fullWidth={true}
-                                value={sourceOfReferral} 
+                                value={sourceOfReferral.value} 
                                 onChange={ e => setSourceOfReferral(e.target.value)}
-                                onBlur={
-                                    e => validateSourceOfReferral(e.target.value)
-                                } 
+                                onBlur={ e => setSourceOfReferral(e.target.value)}
                                 required={true} label="Which individual, agency, or other entity that first referred the applicant to Vocational Rehabilitation?"
-                                error={!validSourceOfReferral} margin="normal"
-                                helperText={sourceOfReferralValidationMessage} type="date"
+                                error={!sourceOfReferral.valid} margin="normal"
+                                helperText={sourceOfReferral.message}
+                                InputLabelProps={{
+                                    shrink: true,
+                                  }}
                             >
                             
                                 {SourceOfReferralOptions.map(option => (
@@ -202,14 +185,12 @@ function Application(props) {
 
                             <TextField id="studentStatus" name="studentStatus"
                                 select fullWidth={true}
-                                value={studentStatus} 
+                                value={studentStatus.value} 
                                 onChange={ e => setStudentStatus(e.target.value)}
-                                onBlur={
-                                    e => validateStudentStatus(e.target.value)
-                                } 
+                                onBlur={ e => setStudentStatus(e.target.value)}
                                 required={true} label="Select your student status."
-                                error={!validstudentStatus} margin="normal"
-                                helperText={studentStatusValidationMessage} type="date"
+                                error={!studentStatus.valid} margin="normal"
+                                helperText={studentStatus.message} type="date"
                             >
 
                                 {StudentStatusChoices.map(option => (
@@ -236,9 +217,7 @@ function Application(props) {
 
         </Mutation>
 
-        </BasicContainer>
-
-        </div>
+        </PersistentDrawerLeft>
 
     )
 
