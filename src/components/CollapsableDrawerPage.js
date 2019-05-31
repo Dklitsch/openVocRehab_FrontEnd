@@ -78,12 +78,11 @@ const useStyles = makeStyles(theme => ({
     marginLeft: 0,
   },
   nestedListItem: {
-    textDecoration: 'none',
     paddingLeft: theme.spacing(4),
   },
   activeLink : {
-    textDecoration: 'none',
-    fontWeight: '500 !important'
+    fontWeight: '500 !important',
+    color: 'black'
   }
 }));
 
